@@ -1,0 +1,35 @@
+# GitHub Actions Workflow for Automatically Labeling Pull Requests
+# This workflow uses the GitHub Labeler action to automatically apply labels
+# based on the modified paths in a pull request.
+
+name: Pull Request Labeler
+
+# Trigger the workflow on pull request events
+on:
+  pull_request_target:
+    types:
+      - opened
+      - synchronize
+      - reopened
+
+jobs:
+  label:
+    # Job that runs on the latest Ubuntu environment
+    runs-on: ubuntu-latest
+
+    permissions:
+      # Read the repository contents to identify changes
+      contents: read
+      # Write permissions to apply labels to the pull request
+      pull-requests: write
+
+    steps:
+      # Step to automatically label the PR based on modified paths
+      - name: Apply labels based on modified paths
+        uses: actions/labeler@v4
+        with:
+          # Use the GitHub token to authenticate and apply the label
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
+
+# Configuration for the labeler can be found in the `.github/labeler.yml` file.
+# More information on configuring the labeler: https://github.com/actions/labeler
